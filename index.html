@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@erickwendel_ - Exemplos Node.js Realtime</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/socket.io-client/dist/socket.io.js"></script>
+    <script>
+        let socket = {};
+        window.onload = () => {
+            socket = io.connect('localhost:3000')
+            socket.on('connect', () => {
+                console.log('conectado!')
+            })
+
+            socket.on('result', (data) => {
+                console.log('data', data)
+                document.getElementById('output').innerHTML = "Total: " + data
+            })
+
+        }
+
+        function send(context) {
+            const numero1 = document.getElementById('numero1').value || 0
+            const numero2 = document.getElementById('numero2').value || 0
+            socket.emit('sum', {
+                numero1: parseInt(numero1),
+                numero2: parseInt(numero2)
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <!-- https://getbootstrap.com/docs/4.0/components/input-group/ -->
+
+    <div class="container-fluid">
+        <br/>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text badge-primary" id="inputGroup-sizing-sm">Primeiro</span>
+                    </div>
+                    <input type="text" class="form-control " id="numero1" onkeyup="send()">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text badge-primary" id="inputGroup-sizing-sm">Segundo</span>
+                    </div>
+                    <input type="text" class="form-control " id="numero2" onkeyup="send()">
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <output class="badge badge-primary" id="output">Total: 0</output>
+            </div>
+        </div>
+</body>
+
+</html>
